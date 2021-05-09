@@ -73,7 +73,7 @@ def get_ranking(request):
                 )
             ).values('adname').annotate(
                 total_activity_time=Sum('activity__duration')
-            )
+            ).order_by('-total_activity_time')
             # print('activities', activities)
             # activities = Activity.objects.prefetch_related('user').filter(
             #     **query_kwargs
@@ -86,7 +86,7 @@ def get_ranking(request):
             # print('user_ids', user_ids)
             label = '每分钟运动次数排行榜'
             head = {'user_id': '用户id', 'user_name': '用户姓名', 'user_age': '用户年龄', 'user_gender': '用户性别',
-                    'count': '每分钟使用次数'}
+                    'count': '每分钟使用次数', 'duration': '运动时长'}
             if user_ids:
                 raw_sql = """
                 SELECT user_id, max(m) as max_count, max(d) as max_duration
@@ -129,7 +129,7 @@ def get_ranking(request):
                      'user_age': users_dict.get(item[0]).get('user_age'),
                      'user_gender': users_dict.get(item[0]).get('user_gender'),
                      'count': item[1],
-                     # 'duration': item[2],
+                     'duration': item[2],
                      }
 
                     for item in res

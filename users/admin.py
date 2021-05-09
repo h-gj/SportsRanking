@@ -3,12 +3,27 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib.admin import ModelAdmin
 # from django.forms import forms
-from django.forms import ModelForm
+from django.forms import ModelForm, forms, ChoiceField
 
 from users.models import User
 
 
 class UserCreationForm(ModelForm):
+    # CHOICES = ((1, 'a'), (2, 'b'))
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['adname'] = ChoiceField(choices=self.get_choices())
+
+    def get_adnames(self):
+        adnames = User.objects.values_list('adname', flat=True).distinct()
+        return adnames
+
+    def get_choices(self):
+        adnames = self.get_adnames()
+        choices = [[adname, adname] for adname in adnames]
+        return choices
+
     class Meta:
         model = User
         # fields = ('email',)

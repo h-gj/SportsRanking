@@ -12,7 +12,6 @@ class Activity(models.Model):
     name = models.CharField(max_length=50)
     location = models.CharField(max_length=50)
     user = models.ForeignKey('users.User', on_delete=models.SET_NULL, null=True)
-    adname = models.CharField(max_length=20, null=True)
 
     class Meta:
         verbose_name_plural = 'activities'
